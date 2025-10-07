@@ -60,6 +60,25 @@ public:
         return rmq(1, 0, n - 1, i, j);
     }
 
+    void update(long long p, long long L, long long R, long long i, long long val) {
+        if (L == R) {
+            A[L] = val;
+        } else {
+            long long mid = (L + R) / 2;
+            if (i <= mid)
+                update(left(p), L, mid, i, val);
+            else
+                update(right(p), mid + 1, R, i, val);
+
+            long long p1 = st[left(p)], p2 = st[right(p)];
+            st[p] = (A[p1] <= A[p2]) ? p1 : p2;
+        }
+    }
+    
+    void update(long long i, long long val) {
+        update(1, 0, n - 1, i, val);
+    }
+
     vector<long long> st;
     vector<long long> A;
     long long n;
