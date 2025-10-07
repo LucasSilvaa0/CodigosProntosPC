@@ -4,49 +4,63 @@ using namespace std;
 class DSU
 {
 public:
-    DSU(long long N)
+    DSU(int N)
     {
         prefixo.assign(N, 0);
-        rank.assign(N, 0);
-        for (long long i = 0; i < N; i++)
+        rank.assign(N, 1);
+        for (int i = 0; i < N; i++)
         {
             prefixo[i] = i;
         }
+        totalGrupos = N;
+        maiorGrupo = 1;
     }
 
-    long long FindSet(long long i)
+    int FindSet(int i)
     {
         return prefixo[i] == i ? i : (prefixo[i] = FindSet(prefixo[i]));
     }
 
-    bool SameSet(long long i, long long j)
+    bool SameSet(int i, int j)
     {
         return FindSet(i) == FindSet(j);
     }
 
-    void UnionSet(long long i, long long j)
+    void UnionSet(int i, int j)
     {
         if (!SameSet(i, j))
         {
-            long long a = FindSet(i);
-            long long b = FindSet(j);
+            int a = FindSet(i);
+            int b = FindSet(j);
 
             if (rank[a] > rank[b])
             {
                 prefixo[b] = a;
+                rank[a] += rank[b];
             }
             else if (rank[b] > rank[a])
             {
                 prefixo[a] = b;
+                rank[b] += rank[a];
             }
             else
             {
                 prefixo[b] = a;
-                rank[a]++;
+                rank[a] += rank[b];
             }
+            totalGrupos--;
+            maiorGrupo = max(maiorGrupo, rank[a]);
+            maiorGrupo = max(maiorGrupo, rank[b]);
         }
     }
 
-    vector<long long> prefixo;
-    vector<long long> rank;
+    int tamanho(int i)
+    {
+        return prefixo[i] == i ? rank[i] : (rank[i] = rank[prefixo[i]]);
+    }
+
+    vector<int> prefixo;
+    vector<int> rank;
+    int totalGrupos;
+    int maiorGrupo;
 };
