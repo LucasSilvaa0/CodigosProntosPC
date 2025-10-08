@@ -7,7 +7,7 @@ public:
     DSU(int N)
     {
         prefixo.assign(N, 0);
-        rank.assign(N, 1);
+        tamanhoGrupo.assign(N, 1);
         for (int i = 0; i < N; i++)
         {
             prefixo[i] = i;
@@ -33,34 +33,34 @@ public:
             int a = FindSet(i);
             int b = FindSet(j);
 
-            if (rank[a] > rank[b])
+            if (TamanhoGrupo(a) > TamanhoGrupo(b))
             {
                 prefixo[b] = a;
-                rank[a] += rank[b];
+                tamanhoGrupo[a] += TamanhoGrupo(b);
             }
-            else if (rank[b] > rank[a])
+            else if (TamanhoGrupo(b) > TamanhoGrupo(a))
             {
                 prefixo[a] = b;
-                rank[b] += rank[a];
+                tamanhoGrupo[b] += TamanhoGrupo(a);
             }
             else
             {
                 prefixo[b] = a;
-                rank[a] += rank[b];
+                tamanhoGrupo[a] += TamanhoGrupo(b);
             }
             totalGrupos--;
-            maiorGrupo = max(maiorGrupo, rank[a]);
-            maiorGrupo = max(maiorGrupo, rank[b]);
+            maiorGrupo = max(maiorGrupo, tamanhoGrupo[a]);
+            maiorGrupo = max(maiorGrupo, tamanhoGrupo[b]);
         }
     }
 
-    int tamanho(int i)
+    int TamanhoGrupo(int i)
     {
-        return prefixo[i] == i ? rank[i] : (rank[i] = rank[prefixo[i]]);
+        return FindSet(i) == i ? tamanhoGrupo[i] : (tamanhoGrupo[i] = tamanhoGrupo[FindSet(i)]);
     }
 
     vector<int> prefixo;
-    vector<int> rank;
+    vector<int> tamanhoGrupo;
     int totalGrupos;
     int maiorGrupo;
 };
